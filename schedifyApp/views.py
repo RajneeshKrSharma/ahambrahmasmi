@@ -65,12 +65,12 @@ class UploadScheduleAttachmentsView(APIView):
 
         files = request.FILES.getlist("files")
 
-        # ✅ पहले पुराने attachments हटा दो (DB + File system से)
-        old_attachments = ScheduleListAttachment.objects.filter(uniqueScheduleId=uniqueScheduleId)
-        for att in old_attachments:
-            if att.file and os.path.isfile(att.file.path):
-                os.remove(att.file.path)   # delete actual file
-            att.delete()  # delete DB record
+        # # ✅ पहले पुराने attachments हटा दो (DB + File system से)
+        # old_attachments = ScheduleListAttachment.objects.filter(uniqueScheduleId=uniqueScheduleId)
+        # for att in old_attachments:
+        #     if att.file and os.path.isfile(att.file.path):
+        #         os.remove(att.file.path)   # delete actual file
+        #     att.delete()  # delete DB record
 
         uploaded_files = []
 
