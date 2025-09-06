@@ -59,34 +59,35 @@ class UploadScheduleAttachmentsView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # 🔑 Fetch max size from config
-        # get_max_allowed_file_size = get_config_value("MAX_ATTACHMENT_SIZE_MB", default=1)
-        # max_size_mb = float(get_max_allowed_file_size)
-        # max_size = int(max_size_mb * 1024 * 1024)
+        # 🔑 Fetch max size from config (in KB, default 500 KB)
+        get_max_allowed_file_size_kb = get_config_value("MAX_ATTACHMENT_SIZE_KB", default=500)
+        max_size_kb = int(get_max_allowed_file_size_kb)
+        max_size = max_size_kb * 1024  # convert KB → bytes
 
         files = request.FILES.getlist("files")
 
-        # # ✅ पहले पुराने attachments हटा दो (DB + File system से)
-        # old_attachments = ScheduleListAttachment.objects.filter(uniqueScheduleId=uniqueScheduleId)
-        # for att in old_attachments:
-        #     if att.file and os.path.isfile(att.file.path):
-        #         os.remove(att.file.path)   # delete actual file
-        #     att.delete()  # delete DB record
-
-        uploaded_files = []
-
+        # ✅ Step 1: Check size of ALL files first
         for f in files:
-            # if f.size > max_size:
-            #     return Response(
-            #         {
-            #             "error": (
-            #                 f"File '{f.name}' is too large "
-            #                 f"Maximum allowed size is {get_max_allowed_file_size} MB."
-            #             )
-            #         },
-            #         status=status.HTTP_400_BAD_REQUEST,
-            #     )
+            if f.size > max_size:
+                return Response(
+                    {
+                        "errorMessage": (
+                            f"File '{f.name}' is too large. {f.size / 1024} KB"),
+                        "eligibleCriteria": f"Maximum allowed size is {max_size_kb} KB."
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
+        # ✅ Step 2: If all files valid, THEN delete old attachments
+        old_attachments = ScheduleListAttachment.objects.filter(uniqueScheduleId=uniqueScheduleId)
+        for att in old_attachments:
+            if att.file and os.path.isfile(att.file.path):
+                os.remove(att.file.path)  # delete actual file
+            att.delete()  # delete DB record
+
+        # ✅ Step 3: Save new attachments
+        uploaded_files = []
+        for f in files:
             attachment = ScheduleListAttachment.objects.create(
                 uniqueScheduleId=uniqueScheduleId,
                 file=f,
