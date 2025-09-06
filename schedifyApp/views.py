@@ -60,9 +60,9 @@ class UploadScheduleAttachmentsView(APIView):
             )
 
         # 🔑 Fetch max size from config
-        get_max_allowed_file_size = get_config_value("MAX_ATTACHMENT_SIZE_MB", default=1)
-        max_size_mb = float(get_max_allowed_file_size)
-        max_size = int(max_size_mb * 1024 * 1024)
+        # get_max_allowed_file_size = get_config_value("MAX_ATTACHMENT_SIZE_MB", default=1)
+        # max_size_mb = float(get_max_allowed_file_size)
+        # max_size = int(max_size_mb * 1024 * 1024)
 
         files = request.FILES.getlist("files")
 
@@ -76,16 +76,16 @@ class UploadScheduleAttachmentsView(APIView):
         uploaded_files = []
 
         for f in files:
-            if f.size > max_size:
-                return Response(
-                    {
-                        "error": (
-                            f"File '{f.name}' is too large "
-                            f"Maximum allowed size is {get_max_allowed_file_size} MB."
-                        )
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+            # if f.size > max_size:
+            #     return Response(
+            #         {
+            #             "error": (
+            #                 f"File '{f.name}' is too large "
+            #                 f"Maximum allowed size is {get_max_allowed_file_size} MB."
+            #             )
+            #         },
+            #         status=status.HTTP_400_BAD_REQUEST,
+            #     )
 
             attachment = ScheduleListAttachment.objects.create(
                 uniqueScheduleId=uniqueScheduleId,
