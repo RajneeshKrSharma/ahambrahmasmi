@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from schedifyApp.models import ScheduleListAttachment, Config, WeatherStatusImages
+from schedifyApp.models import ScheduleListAttachment, Config, WeatherStatusImage
 from .models import SchedifyResource
 
 @admin.register(ScheduleListAttachment)
@@ -46,6 +46,6 @@ class SchedifyResourceAdmin(admin.ModelAdmin):
     ordering = ("-created_at",)
 
 
-@admin.register(WeatherStatusImages)
+@admin.register(WeatherStatusImage)
 class WeatherStatusImagesAdmin(admin.ModelAdmin):
     list_display = ['id', 'url', 'status']

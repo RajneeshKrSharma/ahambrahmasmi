@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from schedifyApp.models import SchedifyResource, ScheduleListAttachment, WeatherStatusImages
+from schedifyApp.models import SchedifyResource, ScheduleListAttachment, WeatherStatusImage
 
 
 class SchedifyResourceSerializer(serializers.ModelSerializer):
@@ -27,5 +27,5 @@ class ScheduleListAttachmentUploadSerializer(serializers.ModelSerializer):
 
 class WeatherStatusImagesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = WeatherStatusImages
+        model = WeatherStatusImage
         fields = '__all__'

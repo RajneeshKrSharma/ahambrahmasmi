@@ -37,7 +37,7 @@ class Config(models.Model):
     def __str__(self):
         return f"{self.key}: {self.value}"
 
-class WeatherStatusImages(models.Model):
+class WeatherStatusImage(models.Model):
     class WeatherStatus(models.TextChoices):
         SUNNY = 'CLEAR', 'Clear'
         CLOUDY = 'CLOUD', 'Cloud'
