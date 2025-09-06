@@ -60,7 +60,8 @@ class UploadScheduleAttachmentsView(APIView):
             )
 
         # 🔑 Fetch max size from config
-        max_size_mb = float(get_config_value("MAX_ATTACHMENT_SIZE_MB", default=1))
+        get_max_allowed_file_size = get_config_value("MAX_ATTACHMENT_SIZE_MB", default=1)
+        max_size_mb = float(get_max_allowed_file_size)
         max_size = int(max_size_mb * 1024 * 1024)
 
         files = request.FILES.getlist("files")
@@ -76,15 +77,11 @@ class UploadScheduleAttachmentsView(APIView):
 
         for f in files:
             if f.size > max_size:
-                file_size_kb = round(f.size / 1024, 2)
-                file_size_mb = round(f.size / (1024 * 1024), 2)
-
                 return Response(
                     {
                         "error": (
                             f"File '{f.name}' is too large "
-                            f"({file_size_kb} KB ≈ {file_size_mb} MB). "
-                            f"Maximum allowed size is {max_size_mb} MB."
+                            f"Maximum allowed size is {get_max_allowed_file_size} MB."
                         )
                     },
                     status=status.HTTP_400_BAD_REQUEST,
