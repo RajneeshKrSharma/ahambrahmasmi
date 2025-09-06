@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from schedifyApp.models import SchedifyResource, ScheduleListAttachment
+from schedifyApp.models import SchedifyResource, ScheduleListAttachment, WeatherStatusImages
 
 
 class SchedifyResourceSerializer(serializers.ModelSerializer):
@@ -24,3 +24,8 @@ class ScheduleListAttachmentUploadSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return instance.file.url
+
+class WeatherStatusImagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WeatherStatusImages
+        fields = '__all__'

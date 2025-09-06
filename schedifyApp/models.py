@@ -36,3 +36,21 @@ class Config(models.Model):
 
     def __str__(self):
         return f"{self.key}: {self.value}"
+
+class WeatherStatusImages(models.Model):
+    class WeatherStatus(models.TextChoices):
+        SUNNY = 'CLEAR', 'Clear'
+        CLOUDY = 'CLOUD', 'Cloud'
+        RAINY = 'RAIN', 'Rain'
+        STORMY = 'STORM', 'Storm'
+        SNOWY = 'SNOW', 'Snow'
+        FOGGY = 'FOG', 'Fog'
+        DRIZZLY = 'DRIZZLE', 'Drizzle'
+        THUNDERY = 'THUNDER', 'Thunder'
+
+    url = models.URLField(max_length=500)
+    status = models.CharField(max_length=20, choices=WeatherStatus.choices)
+    objects = models.Manager()
+
+    def __str__(self):
+        return f"{self.status} - {self.url}"
